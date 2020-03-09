@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="shurajcodx_grey_800">#6C6A6A</color>
+    <color name="shurajcodx_grey_400">#BDBDBD</color>
+    <color name="shurajcodx_white">#FFFFFF</color>
+    <color name="shurajcodx_black">#000000</color>
+    <color name="shurajcodx_skyblue">#B400BFA5</color>
+</resources>

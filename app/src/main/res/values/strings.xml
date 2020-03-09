@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AppRating</string>
+    <string name="rating_dialog_custom_title">Do you like AppRating?</string>
+    <string name="rating_dialog_custom_message">Please take a moment to rate it and help support to improve more new feature.</string>
+</resources>

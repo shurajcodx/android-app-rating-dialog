@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/dialog_rating_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/shurajcodx_dialog_background"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/dialog_rating_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:contentDescription="@string/shurajcodx_app_name"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/dialog_rating_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_rating_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dialog_rating_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_rating_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" />
+
+        <TextView
+            android:id="@+id/dialog_rating_button_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shurajcodx_btn_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:padding="13dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/shurajcodx_rating_dialog_ok"
+            android:textColor="@color/shurajcodx_white"
+            android:layout_below="@id/dialog_rating_subtitle"
+            android:backgroundTint="@color/shurajcodx_skyblue" />
+
+        <LinearLayout
+            android:id="@+id/dialog_rating_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_rating_button_rate"
+            android:orientation="horizontal"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/dialog_rating_button_never_rate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shurajcodx_btn_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="13dp"
+                android:text="@string/shurajcodx_rating_dialog_never"
+                android:textColor="@color/shurajcodx_grey_800"
+                android:layout_marginEnd="10dp"/>
+
+            <TextView
+                android:id="@+id/dialog_rating_button_rate_later"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shurajcodx_btn_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="13dp"
+                android:text="@string/shurajcodx_rating_dialog_cancel" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

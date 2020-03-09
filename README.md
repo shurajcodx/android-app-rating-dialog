@@ -1,5 +1,5 @@
 # AndroidAppRatingDialog
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![](https://jitpack.io/v/shurajcodx/android-app-rating-dialog.svg)](https://jitpack.io/#shurajcodx/android-app-rating-dialog) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 This is a Android App Rating Dialog to encourage user to rate the app on the Google Play Store.
 

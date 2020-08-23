@@ -23,7 +23,7 @@ This is a Android App Rating Dialog to encourage user to rate the app on the Goo
 
     ```java
     dependencies {
-        implementation 'com.github.shurajcodx:android-app-rating-dialog:1.0.2'
+        implementation 'com.github.shurajcodx:android-app-rating-dialog:1.0.3'
     }
     ```
 

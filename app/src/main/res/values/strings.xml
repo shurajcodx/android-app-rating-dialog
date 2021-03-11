@@ -2,4 +2,6 @@
     <string name="app_name">AppRating</string>
     <string name="rating_dialog_custom_title">Do you like AppRating?</string>
     <string name="rating_dialog_custom_message">Please take a moment to rate it and help support to improve more new feature.</string>
+    <string name="app_rating_dialog_open_n_after_2_times_app_launches">App Rating Dialog open after 2 times app launches.</string>
+    <string name="or_click_below_button">Or Click below button</string>
 </resources>

@@ -119,7 +119,7 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         txtTitleDialog.setTextColor(mTitleTextColor != 0 ? ContextCompat.getColor(mContext, mTitleTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
         txtMessageDialog.setTextColor(mMessageTextColor != 0 ? ContextCompat.getColor(mContext, mMessageTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
 
-        txtMessageDialog.setTextSize(TypedValue.COMPLEX_UNIT_PX, mMessageTextSize != 0 ? mMessageTextSize : 16f);
+        txtMessageDialog.setTextSize(TypedValue.COMPLEX_UNIT_PX, mMessageTextSize != 0 ? mMessageTextSize : 50f);
 
         /* set background color */
         if (mLayoutResource != 0) {

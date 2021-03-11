@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,16 +35,17 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
     private static final int DEFAULT_COUNT = 2;
     private static final int DEFAULT_REPEAT_COUNT = 5;
 
-    private Context mContext;
+    private final Context mContext;
     private Drawable mIconDrawable;
     private boolean mActiveDialogIcon = false;
-    private SharedPreferences mSharedPrefs;
+    private final SharedPreferences mSharedPrefs;
     private int mTriggerCount = DEFAULT_COUNT;
     private int mRepeatCount = DEFAULT_REPEAT_COUNT;
     private String mTitleText, mMessageText, mNeverRateButtonText, mRateLaterButtonText, mRateButtonText, mStoreLink;
     private int mLayoutBackgroundColor;
     private int mLayoutResource;
     private int mNeverRateButtonTextColor,mRateLaterButtonTextColor, mTitleTextColor, mMessageTextColor, mRateButtonTextColor;
+    private float mMessageTextSize;
     private int mNeverRateButtonBackground, mRateLaterButtonBackground, mRateButtonBackground;
 
     private TextView txtTitleDialog;
@@ -113,13 +117,20 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         txtTitleDialog.setTextColor(mTitleTextColor != 0 ? ContextCompat.getColor(mContext, mTitleTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
         txtMessageDialog.setTextColor(mMessageTextColor != 0 ? ContextCompat.getColor(mContext, mMessageTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
 
+        txtMessageDialog.setTextSize(TypedValue.COMPLEX_UNIT_PX, mMessageTextSize != 0 ? mMessageTextSize : 16f);
+
         /* set background color */
         if (mLayoutResource != 0) {
             layoutDialogRating.setBackgroundResource(mLayoutResource);
         }
 
-        layoutDialogRating.getBackground().setTint(mLayoutBackgroundColor != 0 ? ContextCompat.getColor(mContext, mLayoutBackgroundColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_white));
-        btnRate.getBackground().setTint(mRateButtonBackground != 0 ? ContextCompat.getColor(mContext, mRateButtonBackground) : ContextCompat.getColor(mContext, R.color.shurajcodx_skyblue));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            layoutDialogRating.getBackground().setTint(mLayoutBackgroundColor != 0 ? ContextCompat.getColor(mContext, mLayoutBackgroundColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_white));
+            btnRate.getBackground().setTint(mRateButtonBackground != 0 ? ContextCompat.getColor(mContext, mRateButtonBackground) : ContextCompat.getColor(mContext, R.color.shurajcodx_skyblue));
+        } else {
+            layoutDialogRating.setBackgroundColor(mLayoutBackgroundColor != 0 ? ContextCompat.getColor(mContext, mLayoutBackgroundColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_white));
+            btnRate.setBackgroundColor(mRateButtonBackground != 0 ? ContextCompat.getColor(mContext, mRateButtonBackground) : ContextCompat.getColor(mContext, R.color.shurajcodx_skyblue));
+        }
 
         if (mRateLaterButtonBackground != 0) {
             btnRateLater.setBackgroundResource(mRateLaterButtonBackground);
@@ -287,6 +298,11 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         @NonNull
         public Builder setMessageTextColor(@ColorRes int textColor) {
             appRatingDialog.mMessageTextColor = textColor;
+            return this;
+        }
+
+        public Builder setMessageTextSize(@DimenRes int textSize) {
+            appRatingDialog.mMessageTextSize = appRatingDialog.mContext.getResources().getDimension(textSize);
             return this;
         }
 

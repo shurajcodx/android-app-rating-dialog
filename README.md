@@ -50,6 +50,7 @@ final AppRatingDialog appRatingDialog = new AppRatingDialog.Builder(this)
         .setTitleTextColor(R.color.white)
         .setMessageText(R.string.rating_dialog_custom_message)
         .setMessageTextColor(R.color.white)
+        .setMessageTextSize(R.dimen.text20sp)
         .setRateButtonText("Rate App", null)
         .setRateButtonBackground(R.color.colorPrimaryDark)
         .build();
@@ -86,11 +87,13 @@ You have the following options to customize dialog ui and dialog show up:
     .setTitleTextColor(@ColorRes int textColor) //for changing title text color
     ```
 
-- Change the message text and color
+- Change the message text, size and color
     ```java
     .setMessageText(@StringRes int messageText)
 
     .setMessageTextColor(@ColorRes int textColor)
+
+    .setMessageTextSize(@DimenRes int textSize)
     ```
 
 - Change the store link

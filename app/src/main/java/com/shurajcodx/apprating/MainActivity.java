@@ -1,6 +1,7 @@
 package com.shurajcodx.apprating;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.shurajcodx.appratingdialog.AppRatingDialog;
+import com.shurajcodx.appratingdialog.listener.RatingDialog;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -53,8 +55,18 @@ public class MainActivity extends AppCompatActivity {
                 .setMessageText("Please take a moment to rate it and help support to improve more new feature.")
                 .setMessageTextSize(R.dimen.text20sp)
                 .setMessageTextColor(R.color.white)
-                .setRateLaterButtonText("Remind me later", null)
-                .setNeverRateButtonText("No, Thanks", null)
+                .setRateLaterButtonText("Remind me later", new RatingDialog.onRemindMeLater() {
+                    @Override
+                    public void onClick() {
+                        Log.e("TAG", "Remind me button pressed");
+                    }
+                })
+                .setNeverRateButtonText("No, Thanks", new RatingDialog.onNever() {
+                    @Override
+                    public void onClick() {
+                        Log.e("TAG", "No thanks button pressed");
+                    }
+                })
                 .setRateButtonBackground(R.color.shurajcodx_skyblue)
                 .build();
 

@@ -23,7 +23,7 @@ This is a Android App Rating Dialog to encourage user to rate the app on the Goo
 
     ```java
     dependencies {
-        implementation 'com.github.shurajcodx:android-app-rating-dialog:1.0.4'
+        implementation 'com.github.shurajcodx:android-app-rating-dialog:1.0.5'
     }
     ```
 
@@ -103,7 +103,7 @@ You have the following options to customize dialog ui and dialog show up:
 
 - Change the rate later button text and add a click listener
     ```java
-    .setRateLaterButtonText(String rateLaterButtonText, @Nullable OnRatingDialogListener onRateLaterClickListener)
+    .setRateLaterButtonText(String rateLaterButtonText, @Nullable RatingDialog.onRemindMeLater onRateLaterClickListener)
     ```
 
 - Change the rate later button text color and background color
@@ -115,7 +115,7 @@ You have the following options to customize dialog ui and dialog show up:
 
 - Change the never rate button text and add listener
     ```java
-    .setNeverRateButtonText(@StringRes int neverRateButtonText, @Nullable OnRatingDialogListener onRateLaterClickListener)
+    .setNeverRateButtonText(@StringRes int neverRateButtonText, @Nullable RatingDialog.onNever onRateLaterClickListener)
     ```
 
 - Change the never rate button text color and background color
@@ -126,7 +126,7 @@ You have the following options to customize dialog ui and dialog show up:
     ```
 - Change the rate button text and add listener
     ```java
-    .setRateButtonText(String rateButtonText, @Nullable OnRatingDialogListener onRateClickListener) // default listener redirect user to google play store 
+    .setRateButtonText(String rateButtonText, @Nullable RatingDialog.onRate onRateClickListener) // default listener redirect user to google play store 
     ```
 
 - Change the rate button text color and background color

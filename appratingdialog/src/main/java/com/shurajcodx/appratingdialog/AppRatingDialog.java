@@ -26,7 +26,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.core.content.ContextCompat;
 
-import com.shurajcodx.appratingdialog.listener.OnRatingDialogListener;
+import com.shurajcodx.appratingdialog.listener.RatingDialog;
 
 public class AppRatingDialog extends AppCompatDialog implements View.OnClickListener {
     private static final String PREFS_NAME = "rating_dialog";
@@ -56,7 +56,9 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
     private ImageView iconDialog;
     private RelativeLayout layoutDialogRating;
 
-    private OnRatingDialogListener onRatingDialogListener;
+    private RatingDialog.onRemindMeLater onRemindMeLater;
+    private RatingDialog.onNever onNever;
+    private RatingDialog.onRate onRate;
 
     private AppRatingDialog(Context context) {
         super(context);
@@ -184,22 +186,22 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
             savedNeverShow();
             dismiss();
 
-            if (onRatingDialogListener != null) {
-                onRatingDialogListener.onClick();
+            if (onNever != null) {
+                onNever.onClick();
             }
         } else if (v.getId() == R.id.dialog_rating_button_rate_later) {
             dismiss();
             incrementLaunchCount(true);
 
-            if (onRatingDialogListener != null) {
-                onRatingDialogListener.onClick();
+            if (onRemindMeLater != null) {
+                onRemindMeLater.onClick();
             }
         } else if (v.getId() == R.id.dialog_rating_button_rate) {
             savedNeverShow();
             dismiss();
 
-            if (onRatingDialogListener != null) {
-                onRatingDialogListener.onClick();
+            if (onRate != null) {
+                onRate.onClick();
             } else {
                 openPlayStore();
             }
@@ -307,14 +309,14 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         }
 
         @NonNull
-        public Builder setRateLaterButtonText(String rateLaterButtonText, @Nullable OnRatingDialogListener onRateLaterClickListener) {
+        public Builder setRateLaterButtonText(String rateLaterButtonText, @Nullable RatingDialog.onRemindMeLater onRateLaterClickListener) {
             appRatingDialog.mRateLaterButtonText = rateLaterButtonText;
-            appRatingDialog.onRatingDialogListener = onRateLaterClickListener;
+            appRatingDialog.onRemindMeLater = onRateLaterClickListener;
             return this;
         }
 
         @NonNull
-        public Builder setRateLaterButtonText(@StringRes int rateLaterButtonText, @Nullable OnRatingDialogListener onRateLaterClickListener) {
+        public Builder setRateLaterButtonText(@StringRes int rateLaterButtonText, @Nullable RatingDialog.onRemindMeLater onRateLaterClickListener) {
             return setRateLaterButtonText(appRatingDialog.mContext.getString(rateLaterButtonText), onRateLaterClickListener);
         }
 
@@ -325,14 +327,14 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         }
 
         @NonNull
-        public Builder setNeverRateButtonText(String neverRateButtonText, @Nullable OnRatingDialogListener onNeverRateClickListener) {
+        public Builder setNeverRateButtonText(String neverRateButtonText, @Nullable RatingDialog.onNever onNeverRateClickListener) {
             appRatingDialog.mNeverRateButtonText = neverRateButtonText;
-            appRatingDialog.onRatingDialogListener = onNeverRateClickListener;
+            appRatingDialog.onNever = onNeverRateClickListener;
             return this;
         }
 
         @NonNull
-        public Builder setNeverRateButtonText(@StringRes int neverRateButtonText, @Nullable OnRatingDialogListener onNeverRateClickListener) {
+        public Builder setNeverRateButtonText(@StringRes int neverRateButtonText, @Nullable RatingDialog.onNever onNeverRateClickListener) {
             return setNeverRateButtonText(appRatingDialog.mContext.getString(neverRateButtonText), onNeverRateClickListener);
         }
 
@@ -343,14 +345,14 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         }
 
         @NonNull
-        public Builder setRateButtonText(String rateButtonText, @Nullable OnRatingDialogListener onRateClickListener) {
-            appRatingDialog.onRatingDialogListener = onRateClickListener;
+        public Builder setRateButtonText(String rateButtonText, @Nullable RatingDialog.onRate onRateClickListener) {
+            appRatingDialog.onRate = onRateClickListener;
             appRatingDialog.mRateButtonText = rateButtonText;
             return this;
         }
 
         @NonNull
-        public Builder setRateButtonText(@StringRes int rateButtonText, @Nullable OnRatingDialogListener onRateClickListener) {
+        public Builder setRateButtonText(@StringRes int rateButtonText, @Nullable RatingDialog.onRate onRateClickListener) {
             return setRateButtonText(appRatingDialog.mContext.getString(rateButtonText), onRateClickListener);
         }
 

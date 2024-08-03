@@ -50,33 +50,9 @@ publishing {
         release(MavenPublication) {
             groupId "com.github.shurajcodx"
             artifactId "appratingdialog"
-            version "1.2.0"
+            version "1.1.0"
 
             artifact("$buildDir/outputs/aar/appratingdialog-release.aar")
-
-            pom {
-                name = 'AppRatingDialog'
-                description = 'A simple rating dialog for Android apps'
-                url = 'https://github.com/shurajcodx/appratingdialog'
-
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'shurajcodx'
-                        name = 'Shuraj Codx'
-                    }
-                }
-                scm {
-                    connection = 'scm:git:github.com/shurajcodx/appratingdialog.git'
-                    developerConnection = 'scm:git:ssh://github.com/shurajcodx/appratingdialog.git'
-                    url = 'https://github.com/shurajcodx/appratingdialog'
-                }
-            }
         }
     }
 }

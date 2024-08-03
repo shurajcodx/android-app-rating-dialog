@@ -49,20 +49,20 @@
         <TextView
             android:id="@+id/dialog_rating_button_rate"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:layout_below="@id/dialog_rating_subtitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="13dp"
             android:background="@drawable/shurajcodx_btn_background"
+            android:backgroundTint="@color/shurajcodx_skyblue"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
             android:padding="13dp"
-            android:layout_marginTop="20dp"
             android:text="@string/shurajcodx_rating_dialog_ok"
-            android:textColor="@color/shurajcodx_white"
-            android:layout_below="@id/dialog_rating_subtitle"
-            android:backgroundTint="@color/shurajcodx_skyblue" />
+            android:textColor="#0D47A1" />
 
         <LinearLayout
             android:id="@+id/dialog_rating_buttons"
@@ -78,7 +78,7 @@
             <TextView
                 android:id="@+id/dialog_rating_button_never_rate"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@drawable/shurajcodx_btn_background"
                 android:clickable="true"
@@ -92,7 +92,7 @@
             <TextView
                 android:id="@+id/dialog_rating_button_rate_later"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@drawable/shurajcodx_btn_background"
                 android:clickable="true"

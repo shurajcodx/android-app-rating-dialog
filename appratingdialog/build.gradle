@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
 group = 'com.github.shurajcodx'
 
 android {
@@ -20,6 +22,11 @@ android {
         }
     }
     namespace 'com.shurajcodx.appratingdialog'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
 dependencies {

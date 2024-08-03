@@ -7,7 +7,7 @@
 #  - ./gradlew build
 
 jdk:
-  version: openjdk17
+ - openjdk17
 
 before_script:
   - ./gradlew clean build

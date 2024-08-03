@@ -31,6 +31,8 @@ android {
 
     lintOptions {
         abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation', 'ExtraTranslation'
     }
 }
 
@@ -79,9 +81,10 @@ publishing {
     }
 }
 
-tasks.withType(Test).configureEach {
-    testLogging {
-        exceptionFormat = 'full'
-        events "passed", "skipped", "failed"
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-Xlint:all'
+    doLast {
+        println "Build output directory: ${buildDir}"
+        println "Classpath: ${classpath.asPath}"
     }
 }

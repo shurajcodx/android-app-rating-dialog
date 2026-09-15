@@ -6,4 +6,11 @@
     <string name="shurajcodx_rating_dialog_ok">Rate app</string>
     <string name="shurajcodx_rating_dialog_cancel">Not now</string>
     <string name="shurajcodx_rating_dialog_never">No, Thanks</string>
+    <string name="shurajcodx_sentiment_title">Enjoying the app?</string>
+    <string name="shurajcodx_sentiment_subtitle">How has your experience been so far?</string>
+    <string name="shurajcodx_sentiment_positive">Yes, love it! ❤️</string>
+    <string name="shurajcodx_sentiment_negative">Not really 💬</string>
+    <string name="shurajcodx_feedback_title">Help us improve</string>
+    <string name="shurajcodx_feedback_subtitle">We are sorry to hear that! Please let us know how we can make your experience better.</string>
+    <string name="shurajcodx_feedback_action">Send Feedback</string>
 </resources>

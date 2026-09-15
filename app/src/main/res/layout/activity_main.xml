@@ -1,50 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Android App Rating Dialog v2.0"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
         android:gravity="center"
-        android:text="@string/app_rating_dialog_open_n_after_2_times_app_launches"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginBottom="8dp" />
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_marginBottom="68dp"
+        android:id="@+id/tv_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Google Play In-App Review • Hybrid Mode • Sentiment Filtering"
+        android:textSize="14sp"
         android:gravity="center"
-        android:text="@string/or_click_below_button"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/rate_button"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginBottom="32dp" />
 
     <Button
-        android:id="@+id/rate_button"
+        android:id="@+id/btn_hybrid_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="136dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="Rate the app"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="1. Test Hybrid Flow (Play In-App Review)"
+        android:textColor="@color/white" />
 
+    <Button
+        android:id="@+id/btn_sentiment_flow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/colorDialogBox"
+        android:text="2. Test Sentiment Feedback Flow (Two-Step)"
+        android:textColor="@color/white" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btn_custom_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="3. Test Custom Dialog (Classic Mode)"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btn_kotlin_dsl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorAccent"
+        android:text="4. Test Kotlin DSL Builder"
+        android:textColor="@color/white" />
+
+</LinearLayout>

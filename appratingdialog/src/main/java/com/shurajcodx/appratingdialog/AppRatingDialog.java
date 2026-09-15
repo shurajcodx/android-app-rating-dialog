@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,9 +45,15 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
     private String mTitleText, mMessageText, mNeverRateButtonText, mRateLaterButtonText, mRateButtonText, mStoreLink;
     private int mLayoutBackgroundColor;
     private int mLayoutResource;
-    private int mNeverRateButtonTextColor,mRateLaterButtonTextColor, mTitleTextColor, mMessageTextColor, mRateButtonTextColor;
+    private int mNeverRateButtonTextColor, mRateLaterButtonTextColor, mTitleTextColor, mMessageTextColor, mRateButtonTextColor;
     private float mMessageTextSize;
     private int mNeverRateButtonBackground, mRateLaterButtonBackground, mRateButtonBackground;
+
+    // v2.0 additions: RatingMode, StoreType, Sentiment triage
+    private RatingMode mRatingMode = RatingMode.HYBRID;
+    private StoreType mStoreType = StoreType.GOOGLE_PLAY;
+    private boolean mSentimentFilterEnabled = false;
+    private String mSentimentTitleText, mSentimentMessageText, mSentimentPositiveText, mSentimentNegativeText;
 
     private TextView txtTitleDialog;
     private TextView txtMessageDialog;
@@ -56,9 +63,17 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
     private ImageView iconDialog;
     private RelativeLayout layoutDialogRating;
 
+    private LinearLayout layoutSentimentButtons;
+    private TextView btnSentimentPositive;
+    private TextView btnSentimentNegative;
+    private TextView btnSentimentDismiss;
+    private LinearLayout layoutRatingButtons;
+
     private RatingDialog.onRemindMeLater onRemindMeLater;
     private RatingDialog.onNever onNever;
     private RatingDialog.onRate onRate;
+    private RatingDialog.onFeedback onFeedback;
+    private RatingDialog.onInAppReviewComplete onInAppReviewComplete;
 
     private AppRatingDialog(Context context) {
         super(context);
@@ -70,7 +85,6 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         mNeverRateButtonText = context.getString(R.string.shurajcodx_rating_dialog_never);
         mRateLaterButtonText = context.getString(R.string.shurajcodx_rating_dialog_cancel);
         mRateButtonText = context.getString(R.string.shurajcodx_rating_dialog_ok);
-        mStoreLink = "market://details?id=" + mContext.getPackageName();
     }
 
     @Override
@@ -78,7 +92,9 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if (getWindow() != null) {
+            getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
 
         setContentView(R.layout.shurajcodx_dialog_rating);
 
@@ -95,58 +111,105 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         txtTitleDialog = findViewById(R.id.dialog_rating_title);
         txtMessageDialog = findViewById(R.id.dialog_rating_subtitle);
 
+        layoutSentimentButtons = findViewById(R.id.dialog_sentiment_buttons);
+        btnSentimentPositive = findViewById(R.id.dialog_button_sentiment_positive);
+        btnSentimentNegative = findViewById(R.id.dialog_button_sentiment_negative);
+        btnSentimentDismiss = findViewById(R.id.dialog_button_sentiment_dismiss);
+        layoutRatingButtons = findViewById(R.id.dialog_rating_buttons);
+
         initLayout();
     }
 
     private void initLayout() {
-        txtTitleDialog.setText(mTitleText);
-        txtMessageDialog.setText(mMessageText);
-        btnRateLater.setText(mRateLaterButtonText);
-        btnNeverRate.setText(mNeverRateButtonText);
-        btnRate.setText(mRateButtonText);
+        if (mSentimentFilterEnabled) {
+            if (layoutSentimentButtons != null) layoutSentimentButtons.setVisibility(View.VISIBLE);
+            if (btnRate != null) btnRate.setVisibility(View.GONE);
+            if (layoutRatingButtons != null) layoutRatingButtons.setVisibility(View.GONE);
 
-        if (mActiveDialogIcon) {
+            txtTitleDialog.setText(mSentimentTitleText != null ? mSentimentTitleText : mContext.getString(R.string.shurajcodx_sentiment_title));
+            txtMessageDialog.setText(mSentimentMessageText != null ? mSentimentMessageText : mContext.getString(R.string.shurajcodx_sentiment_subtitle));
+
+            if (btnSentimentPositive != null && mSentimentPositiveText != null) {
+                btnSentimentPositive.setText(mSentimentPositiveText);
+            }
+            if (btnSentimentNegative != null && mSentimentNegativeText != null) {
+                btnSentimentNegative.setText(mSentimentNegativeText);
+            }
+        } else {
+            if (layoutSentimentButtons != null) layoutSentimentButtons.setVisibility(View.GONE);
+            if (btnRate != null) btnRate.setVisibility(View.VISIBLE);
+            if (layoutRatingButtons != null) layoutRatingButtons.setVisibility(View.VISIBLE);
+
+            txtTitleDialog.setText(mTitleText);
+            txtMessageDialog.setText(mMessageText);
+            btnRateLater.setText(mRateLaterButtonText);
+            btnNeverRate.setText(mNeverRateButtonText);
+            btnRate.setText(mRateButtonText);
+        }
+
+        if (mActiveDialogIcon && iconDialog != null) {
             Drawable drawable = mContext.getPackageManager().getApplicationIcon(mContext.getApplicationInfo());
             iconDialog.setImageDrawable(mIconDrawable != null ? mIconDrawable : drawable);
             iconDialog.setVisibility(View.VISIBLE);
         }
 
         /* set text color */
-        btnRateLater.setTextColor(mRateLaterButtonTextColor != 0 ? ContextCompat.getColor(mContext, mRateLaterButtonTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
-        btnNeverRate.setTextColor(mNeverRateButtonTextColor != 0 ? ContextCompat.getColor(mContext, mNeverRateButtonTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
-        btnRate.setTextColor(mRateButtonTextColor != 0 ? ContextCompat.getColor(mContext, mRateButtonTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_white));
+        if (btnRateLater != null) {
+            btnRateLater.setTextColor(mRateLaterButtonTextColor != 0 ? ContextCompat.getColor(mContext, mRateLaterButtonTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
+        }
+        if (btnNeverRate != null) {
+            btnNeverRate.setTextColor(mNeverRateButtonTextColor != 0 ? ContextCompat.getColor(mContext, mNeverRateButtonTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
+        }
+        if (btnRate != null) {
+            btnRate.setTextColor(mRateButtonTextColor != 0 ? ContextCompat.getColor(mContext, mRateButtonTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_white));
+        }
 
-        txtTitleDialog.setTextColor(mTitleTextColor != 0 ? ContextCompat.getColor(mContext, mTitleTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
-        txtMessageDialog.setTextColor(mMessageTextColor != 0 ? ContextCompat.getColor(mContext, mMessageTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
-
-        txtMessageDialog.setTextSize(TypedValue.COMPLEX_UNIT_PX, mMessageTextSize != 0 ? mMessageTextSize : 50f);
+        if (txtTitleDialog != null) {
+            txtTitleDialog.setTextColor(mTitleTextColor != 0 ? ContextCompat.getColor(mContext, mTitleTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
+        }
+        if (txtMessageDialog != null) {
+            txtMessageDialog.setTextColor(mMessageTextColor != 0 ? ContextCompat.getColor(mContext, mMessageTextColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_grey_800));
+            txtMessageDialog.setTextSize(TypedValue.COMPLEX_UNIT_PX, mMessageTextSize != 0 ? mMessageTextSize : 50f);
+        }
 
         /* set background color */
-        if (mLayoutResource != 0) {
-            layoutDialogRating.setBackgroundResource(mLayoutResource);
+        if (layoutDialogRating != null) {
+            if (mLayoutResource != 0) {
+                layoutDialogRating.setBackgroundResource(mLayoutResource);
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (layoutDialogRating.getBackground() != null) {
+                    layoutDialogRating.getBackground().setTint(mLayoutBackgroundColor != 0 ? ContextCompat.getColor(mContext, mLayoutBackgroundColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_white));
+                }
+                if (btnRate != null && btnRate.getBackground() != null) {
+                    btnRate.getBackground().setTint(mRateButtonBackground != 0 ? ContextCompat.getColor(mContext, mRateButtonBackground) : ContextCompat.getColor(mContext, R.color.shurajcodx_skyblue));
+                }
+            } else {
+                layoutDialogRating.setBackgroundColor(mLayoutBackgroundColor != 0 ? ContextCompat.getColor(mContext, mLayoutBackgroundColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_white));
+                if (btnRate != null) {
+                    btnRate.setBackgroundColor(mRateButtonBackground != 0 ? ContextCompat.getColor(mContext, mRateButtonBackground) : ContextCompat.getColor(mContext, R.color.shurajcodx_skyblue));
+                }
+            }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            layoutDialogRating.getBackground().setTint(mLayoutBackgroundColor != 0 ? ContextCompat.getColor(mContext, mLayoutBackgroundColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_white));
-            btnRate.getBackground().setTint(mRateButtonBackground != 0 ? ContextCompat.getColor(mContext, mRateButtonBackground) : ContextCompat.getColor(mContext, R.color.shurajcodx_skyblue));
-        } else {
-            layoutDialogRating.setBackgroundColor(mLayoutBackgroundColor != 0 ? ContextCompat.getColor(mContext, mLayoutBackgroundColor) : ContextCompat.getColor(mContext, R.color.shurajcodx_white));
-            btnRate.setBackgroundColor(mRateButtonBackground != 0 ? ContextCompat.getColor(mContext, mRateButtonBackground) : ContextCompat.getColor(mContext, R.color.shurajcodx_skyblue));
-        }
-
-        if (mRateLaterButtonBackground != 0) {
+        if (btnRateLater != null && mRateLaterButtonBackground != 0) {
             btnRateLater.setBackgroundResource(mRateLaterButtonBackground);
         }
 
-        if (mNeverRateButtonBackground != 0) {
+        if (btnNeverRate != null && mNeverRateButtonBackground != 0) {
             btnNeverRate.setBackgroundResource(mNeverRateButtonBackground);
         }
     }
 
     private void setListener() {
-        btnRateLater.setOnClickListener(this);
-        btnNeverRate.setOnClickListener(this);
-        btnRate.setOnClickListener(this);
+        if (btnRateLater != null) btnRateLater.setOnClickListener(this);
+        if (btnNeverRate != null) btnNeverRate.setOnClickListener(this);
+        if (btnRate != null) btnRate.setOnClickListener(this);
+
+        if (btnSentimentPositive != null) btnSentimentPositive.setOnClickListener(this);
+        if (btnSentimentNegative != null) btnSentimentNegative.setOnClickListener(this);
+        if (btnSentimentDismiss != null) btnSentimentDismiss.setOnClickListener(this);
     }
 
     private void incrementLaunchCount(final boolean force) {
@@ -167,7 +230,7 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
     }
 
     private int getCount() {
-       return mSharedPrefs.getInt(LAUNCH_COUNT, 0);
+        return mSharedPrefs.getInt(LAUNCH_COUNT, 0);
     }
 
     private int getRemainingCount() {
@@ -182,53 +245,163 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.dialog_rating_button_never_rate) {
+        int id = v.getId();
+        if (id == R.id.dialog_rating_button_never_rate) {
             savedNeverShow();
             dismiss();
 
             if (onNever != null) {
                 onNever.onClick();
             }
-        } else if (v.getId() == R.id.dialog_rating_button_rate_later) {
+        } else if (id == R.id.dialog_rating_button_rate_later) {
             dismiss();
             incrementLaunchCount(true);
 
             if (onRemindMeLater != null) {
                 onRemindMeLater.onClick();
             }
-        } else if (v.getId() == R.id.dialog_rating_button_rate) {
+        } else if (id == R.id.dialog_rating_button_rate) {
             savedNeverShow();
             dismiss();
 
             if (onRate != null) {
                 onRate.onClick();
             } else {
-                openPlayStore();
+                if (mRatingMode == RatingMode.HYBRID) {
+                    launchPlayReviewFlow(new Runnable() {
+                        @Override
+                        public void run() {
+                            openStore();
+                        }
+                    });
+                } else {
+                    openStore();
+                }
+            }
+        } else if (id == R.id.dialog_button_sentiment_positive) {
+            dismiss();
+            if (mRatingMode == RatingMode.HYBRID || mRatingMode == RatingMode.IN_APP_REVIEW_ONLY) {
+                launchPlayReviewFlow(new Runnable() {
+                    @Override
+                    public void run() {
+                        openStore();
+                    }
+                });
+            } else {
+                openStore();
+            }
+        } else if (id == R.id.dialog_button_sentiment_negative) {
+            savedNeverShow();
+            dismiss();
+
+            if (onFeedback != null) {
+                onFeedback.onFeedbackRequested();
+            } else {
+                Toast.makeText(mContext, R.string.shurajcodx_feedback_subtitle, Toast.LENGTH_SHORT).show();
+            }
+        } else if (id == R.id.dialog_button_sentiment_dismiss) {
+            dismiss();
+            incrementLaunchCount(true);
+
+            if (onRemindMeLater != null) {
+                onRemindMeLater.onClick();
             }
         }
     }
 
+    /**
+     * Shows the rating prompt if the trigger/repeat count conditions are met.
+     */
     @Override
     public void show() {
-        if (showRequest()) {
-            super.show();
+        show(false);
+    }
+
+    /**
+     * Bypasses trigger count and shows the rating dialog/flow immediately.
+     */
+    public void forceShow() {
+        show(true);
+    }
+
+    /**
+     * Shows the rating prompt, optionally forcing display regardless of launch counts.
+     *
+     * @param force if true, ignores launch count and SHOW_NEVER checks.
+     */
+    public void show(boolean force) {
+        if (force || showRequest()) {
+            if (mRatingMode == RatingMode.IN_APP_REVIEW_ONLY) {
+                launchPlayReviewFlow(null);
+            } else if (mRatingMode == RatingMode.HYBRID) {
+                if (mSentimentFilterEnabled) {
+                    super.show();
+                } else {
+                    // Try Google Play In-App Review first. If unavailable, fall back to dialog.
+                    launchPlayReviewFlow(new Runnable() {
+                        @Override
+                        public void run() {
+                            AppRatingDialog.super.show();
+                        }
+                    });
+                }
+            } else {
+                // CUSTOM_DIALOG
+                super.show();
+            }
         }
     }
 
+    private void launchPlayReviewFlow(@Nullable final Runnable fallback) {
+        PlayReviewHelper helper = new PlayReviewHelper(mContext);
+        helper.startReview(new ReviewCallback() {
+            @Override
+            public void onComplete(boolean success) {
+                if (success) {
+                    savedNeverShow();
+                    if (onInAppReviewComplete != null) {
+                        onInAppReviewComplete.onComplete(true);
+                    }
+                } else {
+                    if (fallback != null) {
+                        fallback.run();
+                    } else if (onInAppReviewComplete != null) {
+                        onInAppReviewComplete.onComplete(false);
+                    }
+                }
+            }
+        });
+    }
+
+    @SuppressWarnings("unused")
     private void openPlayStore() {
-        final Uri marketUri = Uri.parse(mStoreLink);
+        openStore();
+    }
+
+    private void openStore() {
+        Uri marketUri = (mStoreLink != null && !mStoreLink.isEmpty())
+                ? Uri.parse(mStoreLink)
+                : mStoreType.getStoreUri(mContext, null);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, marketUri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
-            mContext.startActivity(new Intent(Intent.ACTION_VIEW, marketUri));
+            mContext.startActivity(intent);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(mContext, "Couldn't find PlayStore on this device", Toast.LENGTH_SHORT).show();
+            String fallbackUrl = mStoreType.getWebFallbackUrl(mContext, mStoreLink);
+            try {
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(fallbackUrl));
+                webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(webIntent);
+            } catch (Exception e) {
+                Toast.makeText(mContext, "Could not open app store on this device", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     private boolean showRequest() {
         final boolean showNever = mSharedPrefs.getBoolean(SHOW_NEVER, false);
-        final boolean shouldShowRequest =
-                getRemainingCount() == 0
-                && !showNever;
+        final boolean shouldShowRequest = getRemainingCount() == 0 && !showNever;
 
         if (!shouldShowRequest) {
             incrementLaunchCount(true);
@@ -237,7 +410,7 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         return shouldShowRequest;
     }
 
-    private void savedNeverShow () {
+    private void savedNeverShow() {
         SharedPreferences.Editor editor = mSharedPrefs.edit();
         editor.putBoolean(SHOW_NEVER, true);
         editor.apply();
@@ -259,6 +432,80 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
         @NonNull
         public Builder setRepeatCount(int repeatCount) {
             appRatingDialog.mRepeatCount = repeatCount;
+            return this;
+        }
+
+        @NonNull
+        public Builder setRatingMode(RatingMode ratingMode) {
+            appRatingDialog.mRatingMode = ratingMode;
+            return this;
+        }
+
+        @NonNull
+        public Builder setStoreType(StoreType storeType) {
+            appRatingDialog.mStoreType = storeType;
+            return this;
+        }
+
+        @NonNull
+        public Builder setSentimentFilterEnabled(boolean enabled) {
+            appRatingDialog.mSentimentFilterEnabled = enabled;
+            return this;
+        }
+
+        @NonNull
+        public Builder setSentimentTitle(String title) {
+            appRatingDialog.mSentimentTitleText = title;
+            return this;
+        }
+
+        @NonNull
+        public Builder setSentimentTitle(@StringRes int titleRes) {
+            return setSentimentTitle(appRatingDialog.mContext.getString(titleRes));
+        }
+
+        @NonNull
+        public Builder setSentimentMessage(String message) {
+            appRatingDialog.mSentimentMessageText = message;
+            return this;
+        }
+
+        @NonNull
+        public Builder setSentimentMessage(@StringRes int messageRes) {
+            return setSentimentMessage(appRatingDialog.mContext.getString(messageRes));
+        }
+
+        @NonNull
+        public Builder setSentimentPositiveText(String text) {
+            appRatingDialog.mSentimentPositiveText = text;
+            return this;
+        }
+
+        @NonNull
+        public Builder setSentimentPositiveText(@StringRes int textRes) {
+            return setSentimentPositiveText(appRatingDialog.mContext.getString(textRes));
+        }
+
+        @NonNull
+        public Builder setSentimentNegativeText(String text) {
+            appRatingDialog.mSentimentNegativeText = text;
+            return this;
+        }
+
+        @NonNull
+        public Builder setSentimentNegativeText(@StringRes int textRes) {
+            return setSentimentNegativeText(appRatingDialog.mContext.getString(textRes));
+        }
+
+        @NonNull
+        public Builder setFeedbackListener(RatingDialog.onFeedback listener) {
+            appRatingDialog.onFeedback = listener;
+            return this;
+        }
+
+        @NonNull
+        public Builder setInAppReviewListener(RatingDialog.onInAppReviewComplete listener) {
+            appRatingDialog.onInAppReviewComplete = listener;
             return this;
         }
 
@@ -373,7 +620,6 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
             return setStoreLink(appRatingDialog.mContext.getString(resId));
         }
 
-        /* start button background color */
         @NonNull
         public Builder setLayoutBackgroundColor(@ColorRes int backgroundColor) {
             appRatingDialog.mLayoutBackgroundColor = backgroundColor;
@@ -402,7 +648,6 @@ public class AppRatingDialog extends AppCompatDialog implements View.OnClickList
             appRatingDialog.mRateButtonBackground = rateButtonBackground;
             return this;
         }
-        /* end button background color */
 
         @NonNull
         public AppRatingDialog build() {

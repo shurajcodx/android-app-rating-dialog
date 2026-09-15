@@ -46,6 +46,57 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp" />
 
+        <!-- Sentiment buttons container (visible when sentiment mode is active) -->
+        <LinearLayout
+            android:id="@+id/dialog_sentiment_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_rating_subtitle"
+            android:orientation="vertical"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/dialog_button_sentiment_positive"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/shurajcodx_btn_background"
+                android:backgroundTint="@color/shurajcodx_skyblue"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="13dp"
+                android:text="@string/shurajcodx_sentiment_positive"
+                android:textColor="#0D47A1" />
+
+            <TextView
+                android:id="@+id/dialog_button_sentiment_negative"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shurajcodx_btn_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="13dp"
+                android:text="@string/shurajcodx_sentiment_negative"
+                android:textColor="@color/shurajcodx_grey_800" />
+
+            <TextView
+                android:id="@+id/dialog_button_sentiment_dismiss"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="@string/shurajcodx_rating_dialog_cancel"
+                android:textColor="@color/shurajcodx_grey_400" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/dialog_rating_button_rate"
             android:layout_width="match_parent"

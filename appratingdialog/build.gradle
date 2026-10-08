@@ -34,6 +34,12 @@ android {
         jvmTarget = '17'
     }
 
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
+
     lintOptions {
         abortOnError false
         checkReleaseBuilds false
@@ -56,12 +62,15 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }
 
-publishing {
-    publications {
-        release(MavenPublication) {
-            groupId "com.github.shurajcodx"
-            artifactId "appratingdialog"
-            version "2.0.0"
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.shurajcodx'
+                artifactId = 'android-app-rating-dialog'
+                version = '2.0.1'
+            }
         }
     }
 }
@@ -74,6 +83,3 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-tasks.named('publishReleasePublicationToMavenLocal') {
-    dependsOn tasks.named('bundleReleaseAar')
-}
